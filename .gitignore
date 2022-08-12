@@ -1,0 +1,6 @@
+/.cache/
+/.vscode/
+/build/
+/wrapper.sh
+/include/cosmocore/cosmocore_version.hpp
+/src/cosmopc/cosmopc_version.hpp
