@@ -4,13 +4,11 @@ using namespace cosmocore;
 
 cosmomem::cosmomem()
 {
-    m_mem_buf.reserve(mem_size);
     m_mem_buf.resize(mem_size);
 }
 
 cosmomem::cosmomem(u16i addr, const std::vector<u8i>& buf, u16i sz)
 {
-    m_mem_buf.reserve(mem_size);
     m_mem_buf.resize(mem_size);
     load(addr, buf, sz);
 }

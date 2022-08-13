@@ -12,6 +12,7 @@ set(CosmoCore_SRC_LIST
     "${CosmoCore_SRC_DIR}/cosmobus.cpp"
     "${CosmoCore_SRC_DIR}/cosmoclk.cpp"
     "${CosmoCore_SRC_DIR}/cosmocpu.cpp"
+    "${CosmoCore_SRC_DIR}/cosmodsk.cpp"
     "${CosmoCore_SRC_DIR}/cosmokb.cpp"
     "${CosmoCore_SRC_DIR}/cosmomem.cpp"
     "${CosmoCore_SRC_DIR}/cosmoscr.cpp")
@@ -50,6 +51,7 @@ install(FILES
     "${CosmoCore_INC_DIR}/cosmoclk.hpp"
     "${CosmoCore_INC_DIR}/cosmocore.hpp"
     "${CosmoCore_INC_DIR}/cosmocpu.hpp"
+    "${CosmoCore_INC_DIR}/cosmodsk.hpp"
     "${CosmoCore_INC_DIR}/cosmokb.hpp"
     "${CosmoCore_INC_DIR}/cosmomem.hpp"
     "${CosmoCore_INC_DIR}/cosmoscr.hpp"

@@ -1,16 +1,24 @@
 #include "cosmopc_version.hpp"
 #include "cosmoasm.hpp"
 
+#define SDL_MAIN_HANDLED
+
+#include <cosmocore/cosmobus.hpp>
 #include <cosmocore/cosmoclk.hpp>
 #include <cosmocore/cosmocpu.hpp>
-#include <cosmocore/cosmobus.hpp>
+#include <cosmocore/cosmodsk.hpp>
 #include <cosmocore/cosmokb.hpp>
 #include <cosmocore/cosmomem.hpp>
 #include <cosmocore/cosmoscr.hpp>
 
 #include <cstdlib>
+
+#include <chrono>
 #include <iostream>
 #include <memory>
+
+constexpr std::size_t target_cpu_frequency = 1000000; // 1MHz
+constexpr std::size_t target_render_frequency = 60; // 60Hz
 
 std::size_t get_file_handle_size(std::ifstream& file)
 {
@@ -27,7 +35,7 @@ int main(int argc, char** argv)
 {
     if (argc != 3)
     {
-        std::cout << "Usage: " << argv[0] << "[ASM_PATH] [OUTPUT_PATH]\n";
+        std::cout << "Usage: " << argv[0] << " [ASM_PATH] [OUTPUT_PATH]\n";
         return EXIT_FAILURE;
     }
 
@@ -62,21 +70,37 @@ int main(int argc, char** argv)
     std::shared_ptr<cosmocore::cosmomem> cmem = std::make_shared<cosmocore::cosmomem>(0, buf, file_size);
     std::shared_ptr<cosmocore::cosmobus> cbus = std::make_shared<cosmocore::cosmobus>(cmem);
     std::shared_ptr<cosmocore::cosmocpu> ccpu = std::make_shared<cosmocore::cosmocpu>(cbus);
+    std::shared_ptr<cosmocore::cosmodsk> cdsk = std::make_shared<cosmocore::cosmodsk>(cbus);
     std::shared_ptr<cosmocore::cosmoclk> cclk = std::make_shared<cosmocore::cosmoclk>(cbus);
     std::shared_ptr<cosmocore::cosmoscr> cscr = std::make_shared<cosmocore::cosmoscr>(cbus, "COSMOPC");
     std::shared_ptr<cosmocore::cosmokb> ckb = std::make_shared<cosmocore::cosmokb>(cbus);
 
     // Run
+    std::size_t cycles_to_execute = target_cpu_frequency / target_render_frequency;
+    double sleep_time{0};
     while (cscr->window_is_open())
     {
-        // Execute one instruction
-        ccpu->run();
+        // RUNNING
+        // Execute instructions
+        auto start_cpu_time = std::chrono::high_resolution_clock::now();
+        for (std::size_t i = 0; i < cycles_to_execute + 1; i++) ccpu->run();
+        auto end_cpu_time = std::chrono::high_resolution_clock::now();
 
-        // Update
+        // Render
+        auto start_render_time = std::chrono::high_resolution_clock::now();
         cscr->run();
+        auto end_render_time = std::chrono::high_resolution_clock::now();
 
-        // 60Hz cpu
-        SDL_Delay(16);
+        // TIMING
+        auto cpu_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_cpu_time - start_cpu_time).count();
+        auto render_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_render_time - start_render_time).count();
+
+        if ((1.F / target_render_frequency) >= (cpu_time + render_time))
+            sleep_time = (1.F / target_render_frequency) - (cpu_time + render_time);
+        else sleep_time = 0;
+
+        // Seconds -> Milliseconds
+        SDL_Delay(sleep_time * 1000);
     }
 
     // Destroy SDL objects first then clean

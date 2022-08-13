@@ -1,5 +1,5 @@
 # CosmoPC (YZDN)
-Assembler + emulator for an imaginary computer <br/>
+Assembler + emulator for an imaginary computer<br/>
 Example assembly code in /boot.asm
 
 ## Specifications
@@ -20,7 +20,7 @@ Example assembly code in /boot.asm
  * EQUAL
  * EXCEPTION
  * GREATER
- * INTERRUPT
+ * INTERRUPT -> deleted
  * LESSER
  * RESET
  * SHUTDOWN
@@ -100,6 +100,11 @@ Example assembly code in /boot.asm
  * WCYL, Wait cycle, do nothing
  * XOR XORi, Logical XOR, result in first operand
 */
+/**
+ * Memory addresses
+ * 0x0000 BOOT
+ * 0xC17F VIDEO
+*/
 ```
 ## Port numbers
 ```c
@@ -118,6 +123,13 @@ Example assembly code in /boot.asm
  * CosmoKeyboard
  * 0x51: Set key selector, SDL Scancodes
  * 0x52: Get selected key state, 0: Up, 1: Pressed
+ *
+ * CosmoDisk
+ * 0x61: Set mode, 0: Read, 1: Write
+ * 0x62: Select sector
+ * 0x63: Load buffer/ Write buffer
+ * 0x64: Get character/Put character
+ * 0x65: Get sector count
 */
 ```
 
@@ -127,7 +139,5 @@ Used font("repo:/vgafont.ttf"): PCSenior font from http://www.zone38.net/
 
 ## TODO
 Assembler: operand checking <br/>
-?: Untie cpu frequency and window refresh rate <br/>
-Core: simulate disk/permanent storage device <br/>
 Core: More verbose and debug info <br/>
 Core: More error checking
