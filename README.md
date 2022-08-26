@@ -20,7 +20,7 @@ Example assembly code in /boot.asm
  * EQUAL
  * EXCEPTION
  * GREATER
- * INTERRUPT -> deleted
+ * INTERRUPT -> DELETED
  * LESSER
  * RESET
  * SHUTDOWN
@@ -39,7 +39,7 @@ Example assembly code in /boot.asm
  * AND ANDi, Logical AND, result in first operand
  * CALL, Store ZZ, YZ in stack, jumps to code offset + first operand(IMM)
  * CLE, Clear error flag
- * CLI, Clear interrupt flag
+ * CLI, Clear interrupt flag -> DELETED
  * CLXP, Clear exception flag
  * CMP CMPi, Sets condition flags accordingly
  * DEC, Decrement inplace register
@@ -92,7 +92,7 @@ Example assembly code in /boot.asm
  * SHL, Shift Left first operand(REG) is target, second operand(REG) is n-places
  * SHR, Shift Right first operand(REG) is target, second operand(REG) is n-places
  * STE, Set error flag
- * STI, Set interrupt flag
+ * STI, Set interrupt flag -> DELETED
  * STXP, Set exception flag
  * STRS, Set reset flag
  * STSD, Set shutdown flag
