@@ -1,4 +1,3 @@
-#include "cosmopc_version.hpp"
 #include "cosmoasm.hpp"
 
 #define SDL_MAIN_HANDLED

@@ -1,8 +1,6 @@
 #ifndef COSMOCORE_HPP
 #define COSMOCORE_HPP
 
-#include "cosmocore_version.hpp"
-
 #include <cstdint>
 
 namespace cosmocore

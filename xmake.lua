@@ -13,6 +13,8 @@ elseif is_mode("debug") then
     add_cxxflags("-Og", "-ggdb")
 end
 
-ROOT_DIR = path.absolute(".") .. "/"
-
+if is_plat("window") then
+    ROOT_DIR = path.absolute(".") .. "\\"
+else
+    ROOT_DIR = path.absolute(".") .. "/"
 includes("src/cosmopc")

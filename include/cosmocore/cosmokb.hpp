@@ -4,8 +4,6 @@
 #include "cosmocore.hpp"
 #include "cosmobus.hpp"
 
-#include <SDL2/SDL_keyboard.h>
-
 #include <unordered_map>
 
 namespace cosmocore
