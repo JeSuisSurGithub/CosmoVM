@@ -38,9 +38,3 @@ target_compile_options(CosmoPC PUBLIC "${YZDN_FLAGS}")
 
 # Wait first for libraries to build
 add_dependencies(CosmoPC CosmoCore_static CosmoCore_shared)
-
-# Install
-install(TARGETS CosmoPC
-    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")

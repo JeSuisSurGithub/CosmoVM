@@ -1,6 +1,10 @@
 /.cache/
+/.xmake/
 /.vscode/
 /build/
-/wrapper.sh
 /include/cosmocore/cosmocore_version.hpp
+/src/cosmocore/cosmocore_config.hpp
 /src/cosmopc/cosmopc_version.hpp
+/src/cosmopc/cosmopc_config.hpp
+/compile_commands.json
+/wrapper.sh

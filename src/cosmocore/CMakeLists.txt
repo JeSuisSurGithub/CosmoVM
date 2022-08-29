@@ -39,21 +39,3 @@ target_link_libraries(CosmoCore_shared "${SDL2_LIBRARIES}" "SDL2_ttf")
 # Flags
 target_compile_options(CosmoCore_static PUBLIC "${YZDN_FLAGS}")
 target_compile_options(CosmoCore_shared PUBLIC "${YZDN_FLAGS}")
-
-# Install
-install(TARGETS CosmoCore_static CosmoCore_shared
-    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin"
-    LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
-    ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
-
-install(FILES
-    "${CosmoCore_INC_DIR}/cosmobus.hpp"
-    "${CosmoCore_INC_DIR}/cosmoclk.hpp"
-    "${CosmoCore_INC_DIR}/cosmocore.hpp"
-    "${CosmoCore_INC_DIR}/cosmocpu.hpp"
-    "${CosmoCore_INC_DIR}/cosmodsk.hpp"
-    "${CosmoCore_INC_DIR}/cosmokb.hpp"
-    "${CosmoCore_INC_DIR}/cosmomem.hpp"
-    "${CosmoCore_INC_DIR}/cosmoscr.hpp"
-    "${CosmoCore_INC_DIR}/cosmocore_version.hpp"
-    DESTINATION "${CMAKE_INSTALL_PREFIX}/include/cosmocore")
