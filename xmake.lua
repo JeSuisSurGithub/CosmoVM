@@ -17,4 +17,5 @@ if is_plat("window") then
     ROOT_DIR = path.absolute(".") .. "\\"
 else
     ROOT_DIR = path.absolute(".") .. "/"
+end
 includes("src/cosmopc")
