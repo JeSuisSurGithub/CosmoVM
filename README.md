@@ -1,4 +1,4 @@
-# CosmoPC (YZDN)
+# CosmoVM (YZDN)
 Assembler + emulator for an imaginary computer<br/>
 Example assembly code in /boot.asm
 

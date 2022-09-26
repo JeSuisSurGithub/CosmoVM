@@ -1,6 +1,6 @@
 set_xmakever("2.2.5")
 
-set_project("CosmoPC")
+set_project("CosmoVM")
 set_version("1.0.0")
 set_languages("cxx17")
 
@@ -18,4 +18,4 @@ if is_plat("window") then
 else
     ROOT_DIR = path.absolute(".") .. "/"
 end
-includes("src/cosmopc")
+includes("src/cosmovm")

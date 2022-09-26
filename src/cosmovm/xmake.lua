@@ -1,10 +1,10 @@
 includes("../cosmocore")
 
-target("cosmopc")
+target("cosmovm")
     set_version("1.0.0")
     set_kind("binary")
     set_configdir(".")
-    add_configfiles("cosmopc_config.hpp.in")
+    add_configfiles("cosmovm_config.hpp.in")
     add_files(
         "cosmoasm.cpp",
         "main.cpp")

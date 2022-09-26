@@ -1,6 +1,24 @@
+/**
+ * CosmoVM an emulator and assembler for an imaginary cpu
+ * Copyright (C) 2022 JeFaisDesSpaghettis
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "cosmoasm.hpp"
 
-std::vector<std::string> cosmopc::_tokenize(const std::string& _str, std::string delimiter)
+std::vector<std::string> cosmovm::_tokenize(const std::string& _str, std::string delimiter)
 {
     std::string str{_str};
     std::size_t pos{0};
@@ -14,7 +32,7 @@ std::vector<std::string> cosmopc::_tokenize(const std::string& _str, std::string
     return tokens;
 }
 
-std::uint16_t cosmopc::_convert_int_literal(const std::string& _str)
+std::uint16_t cosmovm::_convert_int_literal(const std::string& _str)
 {
     std::string str{_str};
     std::uint8_t integer_base{10};
@@ -31,14 +49,14 @@ std::uint16_t cosmopc::_convert_int_literal(const std::string& _str)
     return std::stoul(str, nullptr, integer_base);
 }
 
-void cosmopc::_replace_substring(std::string& str, const std::string& old, const std::string& new_str)
+void cosmovm::_replace_substring(std::string& str, const std::string& old, const std::string& new_str)
 {
     std::size_t index{0};
     while ((index = str.find(old)) != std::string::npos)
         str.replace(index, old.length(), new_str);
 }
 
-void cosmopc::assemble(std::ifstream &file_in, std::ofstream &file_out)
+void cosmovm::assemble(std::ifstream &file_in, std::ofstream &file_out)
 {
     std::size_t line_count{0};
     std::uint16_t binary_offset{0};

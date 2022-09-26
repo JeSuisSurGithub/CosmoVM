@@ -4,7 +4,7 @@
 /build/
 /include/cosmocore/cosmocore_version.hpp
 /src/cosmocore/cosmocore_config.hpp
-/src/cosmopc/cosmopc_version.hpp
-/src/cosmopc/cosmopc_config.hpp
+/src/cosmovm/cosmovm_version.hpp
+/src/cosmovm/cosmovm_config.hpp
 /compile_commands.json
 /wrapper.sh

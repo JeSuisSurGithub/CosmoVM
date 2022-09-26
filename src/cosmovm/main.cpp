@@ -1,3 +1,21 @@
+/**
+ * CosmoVM an emulator and assembler for an imaginary cpu
+ * Copyright (C) 2022 JeFaisDesSpaghettis
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include "cosmoasm.hpp"
 
 #define SDL_MAIN_HANDLED
@@ -49,7 +67,7 @@ int main(int argc, char** argv)
             std::cout << "Couldn't access " << argv[2] << std::endl;
             return EXIT_FAILURE;
         }
-        cosmopc::assemble(file_in, file_out);
+        cosmovm::assemble(file_in, file_out);
         file_in.close();
         file_out.close();
         std::cout << "Assembled " << argv[1] << " into " << argv[2] << "..." << std::endl;
@@ -74,7 +92,7 @@ int main(int argc, char** argv)
         std::unique_ptr<cosmocore::cosmocpu> ccpu = std::make_unique<cosmocore::cosmocpu>(cbus);
         std::unique_ptr<cosmocore::cosmodsk> cdsk = std::make_unique<cosmocore::cosmodsk>(cbus);
         std::unique_ptr<cosmocore::cosmoclk> cclk = std::make_unique<cosmocore::cosmoclk>(cbus);
-        std::unique_ptr<cosmocore::cosmoscr> cscr = std::make_unique<cosmocore::cosmoscr>(cbus, "COSMOPC");
+        std::unique_ptr<cosmocore::cosmoscr> cscr = std::make_unique<cosmocore::cosmoscr>(cbus, "COSMOVM");
         std::unique_ptr<cosmocore::cosmokb> ckb = std::make_unique<cosmocore::cosmokb>(cbus);
 
         // Run
@@ -113,6 +131,10 @@ int main(int argc, char** argv)
     }
     else
     {
+        std::cout <<
+            "CosmoVM an emulator and assembler for an imaginary cpu\n"
+            "Licensed under GPL-3.0, (see https://www.gnu.org/licenses/)"
+            << std::endl;
         std::cout << "Usage: " << argv[0] << " [ASM_PATH] [OUTPUT_PATH]\n";
         std::cout << "Usage: " << argv[0] << " [BINARY_PATH]\n";
     }
