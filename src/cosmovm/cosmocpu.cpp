@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmocore/cosmocpu.hpp>
+#include <cosmovm/cosmocpu.hpp>
 
-using namespace cosmocore;
+using namespace cosmovm;
 
 cosmocpu::cosmocpu(std::shared_ptr<cosmobus>& bus)
 : m_bus(bus)

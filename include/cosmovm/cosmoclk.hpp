@@ -19,12 +19,12 @@
 #ifndef COSMOCLK_HPP
 #define COSMOCLK_HPP
 
-#include "cosmocore.hpp"
+#include "cosmovm.hpp"
 #include "cosmobus.hpp"
 
 #include <ctime>
 
-namespace cosmocore
+namespace cosmovm
 {
     class cosmoclk
     {

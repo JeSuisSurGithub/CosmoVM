@@ -19,7 +19,7 @@
 #ifndef COSMOSCR_HPP
 #define COSMOSCR_HPP
 
-#include "cosmocore.hpp"
+#include "cosmovm.hpp"
 #include "cosmobus.hpp"
 
 #include <SDL2/SDL.h>
@@ -31,7 +31,7 @@
 #include <memory>
 #include <stdexcept>
 
-namespace cosmocore
+namespace cosmovm
 {
     const std::string FONT_PATH = "vgafont.ttf";
     constexpr u16i VIDEO_START_ADDR = 0xC17F;

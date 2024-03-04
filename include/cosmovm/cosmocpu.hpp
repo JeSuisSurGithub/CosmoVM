@@ -19,7 +19,7 @@
 #ifndef COSMOCPU_HPP
 #define COSMOCPU_HPP
 
-#include "cosmocore.hpp"
+#include "cosmovm.hpp"
 #include "cosmobus.hpp"
 
 #include <cstdint>
@@ -29,7 +29,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace cosmocore
+namespace cosmovm
 {
     constexpr u16i START_ADDR = 0x0000;
     constexpr u16i REG_COUNT = 15;

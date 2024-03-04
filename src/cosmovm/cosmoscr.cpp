@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmocore/cosmoscr.hpp>
+#include <cosmovm/cosmoscr.hpp>
 
-using namespace cosmocore;
+using namespace cosmovm;
 
 cosmoscr::cosmoscr(std::shared_ptr<cosmobus>& bus, const std::string& window_title)
 :

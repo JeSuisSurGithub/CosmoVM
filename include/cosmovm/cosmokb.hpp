@@ -16,31 +16,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmocore/cosmokb.hpp>
+#ifndef COSMOKB_HPP
+#define COSMOKB_HPP
 
-using namespace cosmocore;
+#include "cosmovm.hpp"
+#include "cosmobus.hpp"
 
-cosmokb::cosmokb(std::shared_ptr<cosmobus>& bus)
-:
-m_key_selector(0),
-m_sdl_kb_state(SDL_GetKeyboardState(NULL)),
-m_bus(bus)
+#include <SDL2/SDL_keyboard.h>
+
+#include <unordered_map>
+
+namespace cosmovm
 {
-    m_bus->bind_port(0x51, std::bind(&cosmokb::set_key_selector, this, std::placeholders::_1));
-    m_bus->bind_port(0x52, std::bind(&cosmokb::get_requested_key, this, std::placeholders::_1));
+    // Lazy implementation using directly SDL Scancodes
+    class cosmokb
+    {
+        private: u16i m_key_selector;
+        private: const u8i* m_sdl_kb_state;
+        private: std::shared_ptr<cosmobus>& m_bus;
+
+        public: cosmokb() = delete;
+        public: cosmokb(std::shared_ptr<cosmobus>& bus);
+        public: ~cosmokb();
+
+        public: u16i set_key_selector(u16i key_selector);
+        public: u16i get_requested_key(u16i dummy);
+    };
 }
 
-cosmokb::~cosmokb()
-{
-}
-
-u16i cosmokb::set_key_selector(u16i key_selector)
-{
-    m_key_selector = key_selector;
-    return PORT_DUMMY_VALUE;
-}
-
-u16i cosmokb::get_requested_key(u16i dummy)
-{
-    return m_sdl_kb_state[m_key_selector];
-}
+#endif /* COSMOKB_HPP */

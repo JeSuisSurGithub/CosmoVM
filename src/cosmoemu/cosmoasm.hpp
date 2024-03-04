@@ -29,7 +29,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace cosmovm
+namespace cosmoemu
 {
     typedef struct _instruction
     {

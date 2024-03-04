@@ -19,7 +19,7 @@
 #ifndef COSMODSK_HPP
 #define COSMODSK_HPP
 
-#include "cosmocore.hpp"
+#include "cosmovm.hpp"
 #include "cosmobus.hpp"
 
 #include <cstring>
@@ -27,7 +27,7 @@
 #include <fstream>
 #include <vector>
 
-namespace cosmocore
+namespace cosmovm
 {
     const std::string DISK_PATH = "disk.bin";
     const std::size_t SECTOR_SIZE = 512;

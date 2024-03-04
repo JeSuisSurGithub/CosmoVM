@@ -2,9 +2,9 @@ set_xmakever("2.2.5")
 
 set_project("CosmoVM")
 set_version("1.0.0")
-set_languages("cxx17")
+set_languages("cxxlatest")
 
-add_requires("sdl", "sdl2_ttf", {configs = {binaryonly = true}})
+add_requires("sdl2", "sdl2_ttf", {configs = {binaryonly = true}})
 
 set_warnings("everything")
 if is_mode("release") then
@@ -18,4 +18,4 @@ if is_plat("window") then
 else
     ROOT_DIR = path.absolute(".") .. "/"
 end
-includes("src/cosmovm")
+includes("src/cosmoemu")

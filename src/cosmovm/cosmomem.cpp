@@ -16,16 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmocore/cosmomem.hpp>
+#include <cosmovm/cosmomem.hpp>
 
-using namespace cosmocore;
+using namespace cosmovm;
 
 cosmomem::cosmomem()
+:
+m_mem_buf()
 {
     m_mem_buf.resize(mem_size);
 }
 
 cosmomem::cosmomem(u16i addr, const std::vector<u8i>& buf, u16i sz)
+:
+m_mem_buf()
 {
     m_mem_buf.resize(mem_size);
     load(addr, buf, sz);

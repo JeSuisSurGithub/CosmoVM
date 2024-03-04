@@ -20,13 +20,13 @@
 
 #define SDL_MAIN_HANDLED
 
-#include <cosmocore/cosmobus.hpp>
-#include <cosmocore/cosmoclk.hpp>
-#include <cosmocore/cosmocpu.hpp>
-#include <cosmocore/cosmodsk.hpp>
-#include <cosmocore/cosmokb.hpp>
-#include <cosmocore/cosmomem.hpp>
-#include <cosmocore/cosmoscr.hpp>
+#include <cosmovm/cosmobus.hpp>
+#include <cosmovm/cosmoclk.hpp>
+#include <cosmovm/cosmocpu.hpp>
+#include <cosmovm/cosmodsk.hpp>
+#include <cosmovm/cosmokb.hpp>
+#include <cosmovm/cosmomem.hpp>
+#include <cosmovm/cosmoscr.hpp>
 
 #include <cstdlib>
 
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
             std::cout << "Couldn't access " << argv[2] << std::endl;
             return EXIT_FAILURE;
         }
-        cosmovm::assemble(file_in, file_out);
+        cosmoemu::assemble(file_in, file_out);
         file_in.close();
         file_out.close();
         std::cout << "Assembled " << argv[1] << " into " << argv[2] << "..." << std::endl;
@@ -87,13 +87,13 @@ int main(int argc, char** argv)
         boot_file.read(reinterpret_cast<char*>(buf.data()), file_size);
 
         // Initialize emulator components
-        std::shared_ptr<cosmocore::cosmomem> cmem = std::make_shared<cosmocore::cosmomem>(0, buf, file_size);
-        std::shared_ptr<cosmocore::cosmobus> cbus = std::make_shared<cosmocore::cosmobus>(cmem);
-        std::unique_ptr<cosmocore::cosmocpu> ccpu = std::make_unique<cosmocore::cosmocpu>(cbus);
-        std::unique_ptr<cosmocore::cosmodsk> cdsk = std::make_unique<cosmocore::cosmodsk>(cbus);
-        std::unique_ptr<cosmocore::cosmoclk> cclk = std::make_unique<cosmocore::cosmoclk>(cbus);
-        std::unique_ptr<cosmocore::cosmoscr> cscr = std::make_unique<cosmocore::cosmoscr>(cbus, "COSMOVM");
-        std::unique_ptr<cosmocore::cosmokb> ckb = std::make_unique<cosmocore::cosmokb>(cbus);
+        std::shared_ptr<cosmovm::cosmomem> cmem = std::make_shared<cosmovm::cosmomem>(0, buf, file_size);
+        std::shared_ptr<cosmovm::cosmobus> cbus = std::make_shared<cosmovm::cosmobus>(cmem);
+        std::unique_ptr<cosmovm::cosmocpu> ccpu = std::make_unique<cosmovm::cosmocpu>(cbus);
+        std::unique_ptr<cosmovm::cosmodsk> cdsk = std::make_unique<cosmovm::cosmodsk>(cbus);
+        std::unique_ptr<cosmovm::cosmoclk> cclk = std::make_unique<cosmovm::cosmoclk>(cbus);
+        std::unique_ptr<cosmovm::cosmoscr> cscr = std::make_unique<cosmovm::cosmoscr>(cbus, "COSMOVM");
+        std::unique_ptr<cosmovm::cosmokb> ckb = std::make_unique<cosmovm::cosmokb>(cbus);
 
         // Run
         std::size_t cycles_to_execute = target_cpu_frequency / target_render_frequency;

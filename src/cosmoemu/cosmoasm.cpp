@@ -18,7 +18,7 @@
 
 #include "cosmoasm.hpp"
 
-std::vector<std::string> cosmovm::_tokenize(const std::string& _str, std::string delimiter)
+std::vector<std::string> cosmoemu::_tokenize(const std::string& _str, std::string delimiter)
 {
     std::string str{_str};
     std::size_t pos{0};
@@ -32,7 +32,7 @@ std::vector<std::string> cosmovm::_tokenize(const std::string& _str, std::string
     return tokens;
 }
 
-std::uint16_t cosmovm::_convert_int_literal(const std::string& _str)
+std::uint16_t cosmoemu::_convert_int_literal(const std::string& _str)
 {
     std::string str{_str};
     std::uint8_t integer_base{10};
@@ -49,14 +49,14 @@ std::uint16_t cosmovm::_convert_int_literal(const std::string& _str)
     return std::stoul(str, nullptr, integer_base);
 }
 
-void cosmovm::_replace_substring(std::string& str, const std::string& old, const std::string& new_str)
+void cosmoemu::_replace_substring(std::string& str, const std::string& old, const std::string& new_str)
 {
     std::size_t index{0};
     while ((index = str.find(old)) != std::string::npos)
         str.replace(index, old.length(), new_str);
 }
 
-void cosmovm::assemble(std::ifstream &file_in, std::ofstream &file_out)
+void cosmoemu::assemble(std::ifstream &file_in, std::ofstream &file_out)
 {
     std::size_t line_count{0};
     std::uint16_t binary_offset{0};

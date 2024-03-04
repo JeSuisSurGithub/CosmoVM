@@ -16,15 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmocore/cosmodsk.hpp>
+#include <cosmovm/cosmodsk.hpp>
 
-using namespace cosmocore;
+using namespace cosmovm;
 
 cosmodsk::cosmodsk(std::shared_ptr<cosmobus>& bus)
 :
 m_lba(0),
 m_cache_index(0),
+m_file_size(),
 m_mode(DISK_MODES::READ),
+m_cache(),
+m_file(),
 m_bus(bus)
 {
     m_cache.resize(SECTOR_SIZE);
@@ -76,7 +79,7 @@ u16i cosmodsk::set_lba(u16i lba)
     return PORT_DUMMY_VALUE;
 }
 
-u16i cosmodsk::do_it(u16i dummy)
+u16i cosmodsk::do_it(u16i)
 {
     if (m_mode == DISK_MODES::READ)
         m_file.read(reinterpret_cast<char*>(m_cache.data()), SECTOR_SIZE);
@@ -103,7 +106,7 @@ u16i cosmodsk::request_read_write(u16i data_in)
     return data;
 }
 
-u16i cosmodsk::get_sectors_count(u16i dummy)
+u16i cosmodsk::get_sectors_count(u16i)
 {
     return m_file_size / SECTOR_SIZE;
 }

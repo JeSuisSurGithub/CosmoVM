@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmocore/cosmoclk.hpp>
+#include <cosmovm/cosmoclk.hpp>
 
-using namespace cosmocore;
+using namespace cosmovm;
 
 cosmoclk::cosmoclk(std::shared_ptr<cosmobus>& bus)
 :
@@ -36,42 +36,42 @@ cosmoclk::~cosmoclk()
 {
 }
 
-u16i cosmoclk::get_year(u16i dummy)
+u16i cosmoclk::get_year(u16i)
 {
     time_t tt = time(NULL);
     struct tm* utc_tm = gmtime(&tt);
     return utc_tm->tm_year + 1900;
 }
 
-u16i cosmoclk::get_month(u16i dummy)
+u16i cosmoclk::get_month(u16i)
 {
     time_t tt = time(NULL);
     struct tm* utc_tm = gmtime(&tt);
     return utc_tm->tm_mon + 1;
 }
 
-u16i cosmoclk::get_day(u16i dummy)
+u16i cosmoclk::get_day(u16i)
 {
     time_t tt = time(NULL);
     struct tm* utc_tm = gmtime(&tt);
     return utc_tm->tm_mday;
 }
 
-u16i cosmoclk::get_hour(u16i dummy)
+u16i cosmoclk::get_hour(u16i)
 {
     time_t tt = time(NULL);
     struct tm* utc_tm = gmtime(&tt);
     return utc_tm->tm_hour;
 }
 
-u16i cosmoclk::get_min(u16i dummy)
+u16i cosmoclk::get_min(u16i)
 {
     time_t tt = time(NULL);
     struct tm* utc_tm = gmtime(&tt);
     return utc_tm->tm_min;
 }
 
-u16i cosmoclk::get_seconds(u16i dummy)
+u16i cosmoclk::get_seconds(u16i)
 {
     time_t tt = time(NULL);
     struct tm* utc_tm = gmtime(&tt);

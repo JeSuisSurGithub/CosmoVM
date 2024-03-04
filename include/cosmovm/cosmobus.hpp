@@ -19,7 +19,7 @@
 #ifndef COSMOBUS_HPP
 #define COSMOBUS_HPP
 
-#include "cosmocore.hpp"
+#include "cosmovm.hpp"
 #include "cosmomem.hpp"
 
 #include <functional>
@@ -28,7 +28,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace cosmocore
+namespace cosmovm
 {
     constexpr u16i PORT_DUMMY_VALUE = 0xFFFF;
     class cosmobus

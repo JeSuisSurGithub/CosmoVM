@@ -16,34 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef COSMOMEM_HPP
-#define COSMOMEM_HPP
-
-#include "cosmocore.hpp"
+#ifndef COSMOCORE_HPP
+#define COSMOCORE_HPP
 
 #include <cstdint>
 
-#include <vector>
-
-namespace cosmocore
+namespace cosmovm
 {
-    constexpr u16i mem_size = UINT16_MAX;
-    class cosmomem
-    {
-        private: std::vector<u8i> m_mem_buf;
-
-        public: cosmomem();
-        public: cosmomem(u16i addr, const std::vector<u8i>& buf, u16i sz);
-        public: ~cosmomem();
-
-        public: u8i read8(u16i addr);
-        public: u16i read16(u16i addr);
-        public: void write8(u16i addr, u8i data);
-        public: void write16(u16i addr, u16i data);
-        public: void load(u16i addr, const std::vector<u8i>& buf, u16i sz);
-        public: const std::vector<u8i>& get_buf() const;
-    };
+    typedef std::uint8_t u8i;
+    typedef std::uint16_t u16i;
+    typedef std::uint32_t u32i;
 }
 
-
-#endif /* COSMOMEM_HPP */
+#endif /* COSMOCORE_HPP */

@@ -16,13 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmocore/cosmobus.hpp>
+#include <cosmovm/cosmobus.hpp>
 
-using namespace cosmocore;
+using namespace cosmovm;
 
 cosmobus::cosmobus(std::shared_ptr<cosmomem>& memory_ref)
 :
-m_memory(memory_ref)
+m_memory(memory_ref),
+m_port()
 {
 }
 
