@@ -1,6 +1,6 @@
 /**
  * CosmoVM an emulator and assembler for an imaginary cpu
- * Copyright (C) 2022 JeFaisDesSpaghettis
+ * Copyright (C) 2022 JeSuis
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,61 +16,61 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmovm/cosmobus.hpp>
+#include <cosmovm/bus.hpp>
 
 using namespace cosmovm;
 
-cosmobus::cosmobus(std::shared_ptr<cosmomem>& memory_ref)
+bus::bus(std::shared_ptr<memory>& memory_ref)
 :
 m_memory(memory_ref),
 m_port()
 {
 }
 
-void cosmobus::bind_port(u16i port, const std::function<u16i(u16i)>& func_ptr)
+void bus::bind_port(u16 port, const std::function<u16(u16)>& func_ptr)
 {
     if (m_port.find(port) != m_port.end())
-        throw std::invalid_argument("[COSMOBUS] Port " + std::to_string(port) + " already exists");
+        throw std::invalid_argument(std::format("[BUS] Port {} already exists", port));
     m_port[port] = func_ptr;
 }
 
-u16i cosmobus::device_in(u16i port)
+u16 bus::device_in(u16 port)
 {
     if (m_port.find(port) == m_port.end())
-        throw std::invalid_argument("[COSMOBUS] Port " + std::to_string(port) + " isn't bound");
+        throw std::invalid_argument(std::format("[BUS] Port {} isn't bound", port));
     // Dummy value
-    return m_port[port](PORT_DUMMY_VALUE);
+    return m_port.at(port)(PORT_DUMMY_VALUE);
 }
 
-void cosmobus::device_out(u16i port, u16i data)
+void bus::device_out(u16 port, u16 data)
 {
     if (m_port.find(port) == m_port.end())
-        throw std::invalid_argument("[COSMOBUS] Port " + std::to_string(port) + " isn't bound");
+        throw std::invalid_argument(std::format("[BUS] Port {} isn't bound", port));
     // Return value discarded
-    m_port[port](data);
+     m_port.at(port)(data);
 }
 
-u8i cosmobus::mem_read8(u16i addr)
+u8 bus::mem_read8(u16 addr)
 {
     return m_memory->read8(addr);
 }
 
-u16i cosmobus::mem_read16(u16i addr)
+u16 bus::mem_read16(u16 addr)
 {
     return m_memory->read16(addr);
 }
 
-void cosmobus::mem_write8(u16i addr, u8i data)
+void bus::mem_write8(u16 addr, u8 data)
 {
     m_memory->write8(addr, data);
 }
 
-void cosmobus::mem_write16(u16i addr, u16i data)
+void bus::mem_write16(u16 addr, u16 data)
 {
     m_memory->write16(addr, data);
 }
 
-const std::shared_ptr<cosmomem>& cosmobus::get_memory() const
+const std::shared_ptr<memory>& bus::get_memory() const
 {
     return m_memory;
 }

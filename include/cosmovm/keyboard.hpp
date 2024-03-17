@@ -1,6 +1,6 @@
 /**
  * CosmoVM an emulator and assembler for an imaginary cpu
- * Copyright (C) 2022 JeFaisDesSpaghettis
+ * Copyright (C) 2022 JeSuis
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef COSMOCLK_HPP
-#define COSMOCLK_HPP
+#ifndef KEYBOARD_HPP
+#define KEYBOARD_HPP
 
-#include "cosmovm.hpp"
-#include "cosmobus.hpp"
+#include <SDL2/SDL_keyboard.h>
 
-#include <ctime>
+#include "common.hpp"
+#include "bus.hpp"
 
 namespace cosmovm
 {
-    class cosmoclk
+    // Lazy implementation using directly SDL Scancodes
+    class keyboard
     {
-        private: std::shared_ptr<cosmobus>& m_bus;
+        private:
+            u16 m_key_selector;
+            const u8* m_sdl_kb_state;
+            std::shared_ptr<bus>& m_bus;
 
-        public: cosmoclk() = delete;
-        public: cosmoclk(std::shared_ptr<cosmobus>& bus);
-        public: ~cosmoclk();
+        public:
+            keyboard() = delete;
+            keyboard(const keyboard&) = delete;
+            keyboard(std::shared_ptr<bus>& bus);
+            ~keyboard();
 
-        public: u16i get_year(u16i dummy);
-        public: u16i get_month(u16i dummy);
-        public: u16i get_day(u16i dummy);
-        public: u16i get_hour(u16i dummy);
-        public: u16i get_min(u16i dummy);
-        public: u16i get_seconds(u16i dummy);
+            u16 set_key_selector(u16 key_selector);
+            u16 get_requested_key(u16 dummy);
+            u16 get_pressed_key(u16 dummy);
     };
 }
 
-#endif /* COSMOCLK_HPP */
+#endif /* KEYBOARD_HPP */

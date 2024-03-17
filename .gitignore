@@ -2,9 +2,6 @@
 /.xmake/
 /.vscode/
 /build/
-/include/cosmovm/cosmocore_version.hpp
-/src/cosmovm/cosmocore_config.hpp
-/src/cosmoemu/cosmovm_version.hpp
-/src/cosmoemu/cosmovm_config.hpp
+/example/build/
 /compile_commands.json
 /wrapper.sh

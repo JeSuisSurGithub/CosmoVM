@@ -1,7 +1,7 @@
 set_xmakever("2.2.5")
 
 set_project("CosmoVM")
-set_version("1.0.0")
+set_version("2.0.0")
 set_languages("cxxlatest")
 
 add_requires("sdl2", "sdl2_ttf", {configs = {binaryonly = true}})

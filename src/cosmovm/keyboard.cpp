@@ -1,6 +1,6 @@
 /**
  * CosmoVM an emulator and assembler for an imaginary cpu
- * Copyright (C) 2022 JeFaisDesSpaghettis
+ * Copyright (C) 2022 JeSuis
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,45 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmovm/cosmokb.hpp>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_scancode.h>
+#include <cosmovm/keyboard.hpp>
 
 using namespace cosmovm;
 
-cosmokb::cosmokb(std::shared_ptr<cosmobus>& bus)
+keyboard::keyboard(std::shared_ptr<bus>& bus)
 :
 m_key_selector(0),
 m_sdl_kb_state(SDL_GetKeyboardState(NULL)),
 m_bus(bus)
 {
-    m_bus->bind_port(0x51, std::bind(&cosmokb::set_key_selector, this, std::placeholders::_1));
-    m_bus->bind_port(0x52, std::bind(&cosmokb::get_requested_key, this, std::placeholders::_1));
+    m_bus->bind_port(0x51, std::bind(&keyboard::set_key_selector, this, std::placeholders::_1));
+    m_bus->bind_port(0x52, std::bind(&keyboard::get_requested_key, this, std::placeholders::_1));
+    m_bus->bind_port(0x53, std::bind(&keyboard::get_pressed_key, this, std::placeholders::_1));
 }
 
-cosmokb::~cosmokb()
+keyboard::~keyboard()
 {
 }
 
-u16i cosmokb::set_key_selector(u16i key_selector)
+u16 keyboard::set_key_selector(u16 key_selector)
 {
     m_key_selector = key_selector;
     return PORT_DUMMY_VALUE;
 }
 
-u16i cosmokb::get_requested_key(u16i)
+u16 keyboard::get_requested_key(u16)
 {
     return m_sdl_kb_state[m_key_selector];
+}
+
+u16 keyboard::get_pressed_key(u16)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_KEYDOWN) {
+            return event.key.keysym.scancode;
+        }
+    }
+    return SDL_SCANCODE_UNKNOWN;
 }

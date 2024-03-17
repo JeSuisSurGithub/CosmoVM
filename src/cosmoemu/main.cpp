@@ -1,6 +1,6 @@
 /**
  * CosmoVM an emulator and assembler for an imaginary cpu
- * Copyright (C) 2022 JeFaisDesSpaghettis
+ * Copyright (C) 2022 JeSuis
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,126 +16,219 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "cosmoasm.hpp"
-
 #define SDL_MAIN_HANDLED
-
-#include <cosmovm/cosmobus.hpp>
-#include <cosmovm/cosmoclk.hpp>
-#include <cosmovm/cosmocpu.hpp>
-#include <cosmovm/cosmodsk.hpp>
-#include <cosmovm/cosmokb.hpp>
-#include <cosmovm/cosmomem.hpp>
-#include <cosmovm/cosmoscr.hpp>
 
 #include <cstdlib>
 
 #include <chrono>
 #include <iostream>
+#include <filesystem>
 #include <memory>
+#include <stdexcept>
+#include <tuple>
 
-constexpr std::size_t target_cpu_frequency = 1000000; // 1MHz
-constexpr std::size_t target_render_frequency = 60; // 60Hz
+#include <cosmovm/bus.hpp>
+#include <cosmovm/clock.hpp>
+#include <cosmovm/cpu.hpp>
+#include <cosmovm/disk.hpp>
+#include <cosmovm/display.hpp>
+#include <cosmovm/keyboard.hpp>
+#include <cosmovm/memory.hpp>
 
-std::size_t get_file_handle_size(std::ifstream& file)
+#include "assembler.hpp"
+
+constexpr std::size_t TARGET_CPU_FREQ = 1000000; // 1MHz
+constexpr std::size_t TARGET_RENDER_FREQ = 60; // 60Hz
+
+void build(const std::string& outputpath, const std::string& inputpath)
 {
-    std::size_t original_pos = file.tellg();
+    {
+        std::cout << std::format("[BUILDER] Assembling {}...", inputpath) << std::endl;
+        std::ifstream asm_file {inputpath, std::ios::in};
+        std::ofstream code_file{std::format("{}.code" , outputpath), std::ios::binary | std::ios::out};
+        std::ofstream addr_file{std::format("{}.addr", outputpath), std::ios::binary | std::ios::out};
+        std::ofstream ref_file {std::format("{}.ref" , outputpath), std::ios::binary | std::ios::out};
 
-    file.seekg(0, std::ios::end);
-    std::size_t file_size = file.tellg();
+        if (!asm_file.is_open()) {
+            throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}", inputpath));
+        }
 
-    file.seekg(original_pos);
-    return file_size;
+        cosmoasm::assemble(asm_file, code_file, addr_file, ref_file);
+    }
+    {
+
+        std::cout << std::format("[BUILDER] Linking {}...", inputpath) << std::endl;
+        std::ifstream code_file{std::format("{}.code" , outputpath), std::ios::binary | std::ios::in};
+        std::ifstream addr_file{std::format("{}.addr", outputpath), std::ios::binary | std::ios::in};
+        std::ifstream ref_file {std::format("{}.ref" , outputpath), std::ios::binary | std::ios::in};
+        std::ofstream bin_file {std::format("{}.bin" , outputpath), std::ios::binary | std::ios::out};
+
+        if (!code_file.is_open()) {
+            throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}.code", outputpath));
+        }
+        if (!addr_file.is_open()) {
+            throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}.addr", outputpath));
+        }
+        if (!ref_file.is_open()) {
+            throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}.ref", outputpath));
+        }
+
+        cosmoasm::link(code_file, addr_file, ref_file, bin_file);
+    }
+}
+
+void build(const std::string& outputpath, const std::vector<std::string>& inputpaths)
+{
+    {
+        std::cout << "[BUILDER] Assembling..." << std::endl;
+        for (const auto& inputpath : inputpaths) {
+            std::cout << std::format("\t{}", inputpath) << std::endl;
+
+            std::string outputpath_prefix = std::filesystem::path(inputpath).filename().string();
+            std::ifstream asm_file {inputpath, std::ios::in};
+            std::ofstream code_file{std::format("{}.code" , outputpath_prefix), std::ios::binary | std::ios::out};
+            std::ofstream addr_file{std::format("{}.addr", outputpath_prefix) , std::ios::binary | std::ios::out};
+            std::ofstream ref_file {std::format("{}.ref" , outputpath_prefix) , std::ios::binary | std::ios::out};
+
+            if (!asm_file.is_open()) {
+                throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}", inputpath));
+            }
+
+            cosmoasm::assemble(asm_file, code_file, addr_file, ref_file);
+        }
+    }
+    {
+        std::cout << "[BUILDER] Linking:" << std::endl;
+        for (const auto& inputpath : inputpaths) {
+            std::cout << std::format("\t{}", inputpath) << std::endl;
+        }
+
+        std::vector<std::tuple<std::ifstream, std::ifstream, std::ifstream>> object_files;
+
+        for (const auto& inputpath : inputpaths) {
+            std::string outputpath_prefix = std::filesystem::path(inputpath).filename().string();
+
+            object_files.push_back(std::make_tuple(
+                std::ifstream{std::format("{}.code" , outputpath_prefix), std::ios::binary | std::ios::in},
+                std::ifstream{std::format("{}.addr", outputpath_prefix) , std::ios::binary | std::ios::in},
+                std::ifstream{std::format("{}.ref" , outputpath_prefix) , std::ios::binary | std::ios::in}));
+
+            if (!std::get<0>(object_files.back()).is_open()) {
+            throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}.code", outputpath_prefix));
+            }
+            if (!std::get<1>(object_files.back()).is_open()) {
+                throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}.addr", outputpath_prefix));
+            }
+            if (!std::get<2>(object_files.back()).is_open()) {
+                throw std::invalid_argument(std::format("[BUILDER] Couldn't open {}.ref", outputpath_prefix));
+            }
+        }
+
+        std::ofstream addr_file{std::format("{}.addr", outputpath), std::ios::binary | std::ios::out};
+        std::ofstream ref_file {std::format("{}.ref" , outputpath), std::ios::binary | std::ios::out};
+        std::ofstream bin_file {std::format("{}.bin" , outputpath), std::ios::binary | std::ios::out};
+
+        cosmoasm::link(object_files, addr_file, ref_file, bin_file);
+    }
+}
+
+void run(const std::string& disk_path)
+{
+    std::cout << std::format("[EMULATOR] Booting from {}...", disk_path) << std::endl;
+
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+    TTF_Init();
+
+    // Overwrite disk
+
+    // Prepare disk
+    std::vector<std::uint8_t> boot(cosmovm::SECTOR_SIZE, 0);
+    {
+        std::ifstream disk_file{disk_path, std::ios::binary | std::ios::in};
+        if (!disk_file.is_open()) {
+            throw std::invalid_argument(std::format("[EMULATOR] Couldn't open {}", disk_path));
+        }
+        if (cosmoasm::fsize(disk_file) < cosmovm::SECTOR_SIZE) {
+            throw std::invalid_argument(std::format("[EMULATOR] Invalid boot disk {}", disk_path));
+        }
+        disk_file.read(reinterpret_cast<char*>(boot.data()), cosmovm::SECTOR_SIZE);
+    }
+
+    // Initialize emulator components
+    std::shared_ptr<cosmovm::memory> cmem = std::make_shared<cosmovm::memory>(0, boot, cosmovm::SECTOR_SIZE);
+    std::shared_ptr<cosmovm::bus> cbus = std::make_shared<cosmovm::bus>(cmem);
+    std::unique_ptr<cosmovm::clock> cclk = std::make_unique<cosmovm::clock>(cbus);
+    std::unique_ptr<cosmovm::cpu> ccpu = std::make_unique<cosmovm::cpu>(cbus);
+    std::unique_ptr<cosmovm::disk> cdsk = std::make_unique<cosmovm::disk>(cbus, disk_path);
+    std::unique_ptr<cosmovm::display> cscr = std::make_unique<cosmovm::display>(cbus, "CosmoVM");
+    std::unique_ptr<cosmovm::keyboard> ckb = std::make_unique<cosmovm::keyboard>(cbus);
+
+    // Run
+    std::size_t cycles_to_execute = TARGET_CPU_FREQ / TARGET_RENDER_FREQ;
+    double sleep_time = 0;
+
+    while (cscr->window_is_open() && !ccpu->shutdown_flag_set())
+    {
+        // RUNNING
+        // Execute instructions
+        auto start_cpu_time = std::chrono::high_resolution_clock::now();
+        for (std::size_t i = 0; i < std::max(cycles_to_execute, static_cast<std::size_t>(1)); i++) ccpu->run();
+        auto end_cpu_time = std::chrono::high_resolution_clock::now();
+
+        // Render
+        auto start_render_time = std::chrono::high_resolution_clock::now();
+        cscr->run();
+        auto end_render_time = std::chrono::high_resolution_clock::now();
+
+        // TIMING
+        auto cpu_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_cpu_time - start_cpu_time).count();
+        auto render_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_render_time - start_render_time).count();
+
+        if ((1.F / TARGET_RENDER_FREQ) >= (cpu_time + render_time))
+            sleep_time = (1.F / TARGET_RENDER_FREQ) - (cpu_time + render_time);
+        else sleep_time = 0;
+
+        // Seconds -> Milliseconds
+        SDL_Delay(sleep_time * 1000);
+    }
+
+    std::cout << "[EMULATOR] Shutting down..." << std::endl;
+
+    if (ccpu->shutdown_flag_set() && ccpu->exception_flag_set()) {
+        std::cout << std::format("[EMULATOR] Exception flag set... dumping memory into {}...", cosmovm::DUMP_PATH) << std::endl;
+        cmem->dump();
+    }
+
+    // Destroy SDL objects first then clean
+    cscr.reset();
+
+    TTF_Quit();
+    SDL_Quit();
 }
 
 int main(int argc, char** argv)
 {
-    if (argc == 3)
-    {
-        // Assemble
-        std::cout << "Assembling " << argv[1] << " into " << argv[2] << "..." << std::endl;
-        std::ifstream file_in{argv[1], std::ios::in};
-        std::ofstream file_out{argv[2], std::ios::out | std::ios::binary};
+    std::vector<std::string> args(argv, argv + argc);
 
-        if (!file_in.is_open())
-        {
-            std::cout << "Couldn't access " << argv[1] << std::endl;
-            return EXIT_FAILURE;
+    try {
+        if (argc == 1) {
+            std::cout <<
+                "CosmoVM an emulator and assembler for an imaginary cpu\n"
+                "Licensed under GPL-3.0, (see https://www.gnu.org/licenses/)"
+                << std::endl;
+            std::cout << std::format("\tUsage: {} [DISK_PATH]", args.at(0)) << std::endl;
+            std::cout << std::format("\tUsage: {} [OUTPUT_PREFIX] [INPUT_ASM]", args.at(0)) << std::endl;
+            std::cout << std::format("\tUsage: {} [OUTPUT_PREFIX] [INPUT_ASM1] [INPUT_ASM2]...", args.at(0)) << std::endl;
+        } else if(argc == 2) {
+            run(args.at(1));
+        } else if (argc == 3) {
+            build(args.at(1), args.at(2));
+        } else {
+            build(args.at(1), std::vector<std::string>(argv + 2, argv + argc));
         }
-        if (!file_out.is_open())
-        {
-            std::cout << "Couldn't access " << argv[2] << std::endl;
-            return EXIT_FAILURE;
-        }
-        cosmoemu::assemble(file_in, file_out);
-        file_in.close();
-        file_out.close();
-        std::cout << "Assembled " << argv[1] << " into " << argv[2] << "..." << std::endl;
-        return EXIT_SUCCESS;
+    } catch (const std::exception& err) {
+        std::cerr << err.what() << std::endl;
+        std::exit(EXIT_FAILURE);
     }
-    else if(argc == 2)
-    {
-        std::cout << "Booting from " << argv[1] << "..." << std::endl;
-
-        SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-        TTF_Init();
-
-        // Read binary
-        std::ifstream boot_file{argv[1], std::ios::in | std::ios::binary};
-        std::size_t file_size = get_file_handle_size(boot_file);
-        std::vector<std::uint8_t> buf(file_size);
-        boot_file.read(reinterpret_cast<char*>(buf.data()), file_size);
-
-        // Initialize emulator components
-        std::shared_ptr<cosmovm::cosmomem> cmem = std::make_shared<cosmovm::cosmomem>(0, buf, file_size);
-        std::shared_ptr<cosmovm::cosmobus> cbus = std::make_shared<cosmovm::cosmobus>(cmem);
-        std::unique_ptr<cosmovm::cosmocpu> ccpu = std::make_unique<cosmovm::cosmocpu>(cbus);
-        std::unique_ptr<cosmovm::cosmodsk> cdsk = std::make_unique<cosmovm::cosmodsk>(cbus);
-        std::unique_ptr<cosmovm::cosmoclk> cclk = std::make_unique<cosmovm::cosmoclk>(cbus);
-        std::unique_ptr<cosmovm::cosmoscr> cscr = std::make_unique<cosmovm::cosmoscr>(cbus, "COSMOVM");
-        std::unique_ptr<cosmovm::cosmokb> ckb = std::make_unique<cosmovm::cosmokb>(cbus);
-
-        // Run
-        std::size_t cycles_to_execute = target_cpu_frequency / target_render_frequency;
-        double sleep_time{0};
-        while (cscr->window_is_open())
-        {
-            // RUNNING
-            // Execute instructions
-            auto start_cpu_time = std::chrono::high_resolution_clock::now();
-            for (std::size_t i = 0; i < cycles_to_execute + 1; i++) ccpu->run();
-            auto end_cpu_time = std::chrono::high_resolution_clock::now();
-
-            // Render
-            auto start_render_time = std::chrono::high_resolution_clock::now();
-            cscr->run();
-            auto end_render_time = std::chrono::high_resolution_clock::now();
-
-            // TIMING
-            auto cpu_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_cpu_time - start_cpu_time).count();
-            auto render_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_render_time - start_render_time).count();
-
-            if ((1.F / target_render_frequency) >= (cpu_time + render_time))
-                sleep_time = (1.F / target_render_frequency) - (cpu_time + render_time);
-            else sleep_time = 0;
-
-            // Seconds -> Milliseconds
-            SDL_Delay(sleep_time * 1000);
-        }
-
-        // Destroy SDL objects first then clean
-        cscr.reset();
-        TTF_Quit();
-        SDL_Quit();
-        return EXIT_SUCCESS;
-    }
-    else
-    {
-        std::cout <<
-            "CosmoVM an emulator and assembler for an imaginary cpu\n"
-            "Licensed under GPL-3.0, (see https://www.gnu.org/licenses/)"
-            << std::endl;
-        std::cout << "Usage: " << argv[0] << " [ASM_PATH] [OUTPUT_PATH]\n";
-        std::cout << "Usage: " << argv[0] << " [BINARY_PATH]\n";
-    }
+    std::exit(EXIT_SUCCESS);
 }

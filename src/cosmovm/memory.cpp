@@ -1,6 +1,6 @@
 /**
  * CosmoVM an emulator and assembler for an imaginary cpu
- * Copyright (C) 2022 JeFaisDesSpaghettis
+ * Copyright (C) 2022 JeSuis
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,53 +16,59 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmovm/cosmomem.hpp>
+#include <fstream>
+
+#include <cosmovm/memory.hpp>
 
 using namespace cosmovm;
 
-cosmomem::cosmomem()
+memory::memory()
 :
 m_mem_buf()
 {
-    m_mem_buf.resize(mem_size);
 }
 
-cosmomem::cosmomem(u16i addr, const std::vector<u8i>& buf, u16i sz)
+memory::memory(u16 addr, const std::vector<u8>& buf, u16 sz)
 :
 m_mem_buf()
 {
-    m_mem_buf.resize(mem_size);
     load(addr, buf, sz);
 }
 
-cosmomem::~cosmomem() {}
+memory::~memory() {}
 
-u8i cosmomem::read8(u16i addr)
+u8 memory::read8(u16 addr)
 {
     return m_mem_buf.at(addr);
 }
 
-u16i cosmomem::read16(u16i addr)
+u16 memory::read16(u16 addr)
 {
-    return static_cast<u16i>(m_mem_buf.at(addr + 1)) << 8 | m_mem_buf.at(addr);
+    return static_cast<u16>(m_mem_buf.at(addr + 1)) << 8 | m_mem_buf.at(addr);
 }
 
-void cosmomem::write8(u16i addr, u8i data)
+void memory::write8(u16 addr, u8 data)
 {
     m_mem_buf.at(addr) = data;
 }
-void cosmomem::write16(u16i addr, u16i data)
+void memory::write16(u16 addr, u16 data)
 {
     m_mem_buf.at(addr) = data & 0xFF;
     m_mem_buf.at(addr + 1) = data >> 8;
 }
 
-void cosmomem::load(u16i offset, const std::vector<u8i>& buf, u16i sz)
+void memory::load(u16 offset, const std::vector<u8>& buf, u16 sz)
 {
-    m_mem_buf.insert(m_mem_buf.begin() + offset, buf.begin(), buf.begin() + sz);
+    std::copy(buf.begin(), buf.begin() + sz, m_mem_buf.begin() + offset);
 }
 
-const std::vector<u8i>& cosmomem::get_buf() const
+const std::array<u8, MEM_SIZE>& memory::get_buf() const
 {
     return m_mem_buf;
+}
+
+void memory::dump()
+{
+    std::ofstream dump_file{DUMP_PATH, std::ios::binary | std::ios::out};
+    dump_file.write(reinterpret_cast<const char*>(m_mem_buf.data()), MEM_SIZE);
 }

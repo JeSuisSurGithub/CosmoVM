@@ -1,45 +1,39 @@
-# CosmoVM (YZDN)
+# CosmoVM
 Assembler + emulator for an imaginary computer<br/>
-Example assembly code in /boot.asm
+Example assembly code in [/example/boot.asm](/example/boot.asm)
 
 ## Specifications
 ```c
 /**
  * Cosmo 16-bit CPU
  * General purpose registers:
- * AZ, BZ, CZ, DZ, EZ, FZ, GZ, HZ, IZ, JZ
+ * AZ, BZ, CZ, DZ, EZ, FZ, GZ, HZ
  *
- * Special purpose registers:
- * ZZ: Code offset
- * YZ: Code index
- * XZ: Stack base
- * WZ: Stack index
+ * Special registers:
+ * MO: Memory Offset
+ * XA: eXecution Address
+ * SB: Stack base
+ * SP: Stack ptr
  *
  * Flags from LSB to MSB
  * ERROR
- * EQUAL
  * EXCEPTION
+ * EQUAL
  * GREATER
- * INTERRUPT -> DELETED
  * LESSER
  * RESET
  * SHUTDOWN
 */
 /**
  * Instruction set:
+ * i-variants: takes a immediate or a label name
+ * b-variants: byte-wide as opposed to word-wide by default
  *
- * Operand rules:
- * REG: %REG
- * MEM: %REG
- * IMM: $IMM, &LOC
- * i: Immediate
- * b: byte
- *
+ * WCYL, Wait cycle does nothing
  * ADD ADDi, Add, result in first operand
  * AND ANDi, Logical AND, result in first operand
- * CALL, Store ZZ, YZ in stack, jumps to code offset + first operand(IMM)
- * CLE, Clear error flag
- * CLI, Clear interrupt flag -> DELETED
+ * CALL, Store MO, XA in stack, jumps to code offset + first operand(IMM)
+ * CLER, Clear error flag
  * CLXP, Clear exception flag
  * CMP CMPi, Sets condition flags accordingly
  * DEC, Decrement inplace register
@@ -67,17 +61,21 @@ Example assembly code in /boot.asm
  * Following instructions copy the second operand to the first operand
  * Move word
  * MOV, register <- register
- * MOVrm, register <- memory
- * MOVri, register <- immediate
- * MOVmr, memory <- register
- * MOVmm, memory <- memory
- * MOVmi, memory <- immediate
+ * MOVi, register <- immediate
+ * LOAD, register <- memory at register
+ * LOADi, register <- memory at immediate
+ * STOR, memory at register <- register
+ * STORi, memory at register <- immediate
+ * COPY, memory at register <- memory at register
+ * COPYi, memory at register <- memory at immediate
  *
  * Move byte
- * MOVbrm, register <- memory
- * MOVbmr, memory <- register
- * MOVbmm, memory <- memory
- * MOVbmi, memory <- immediate
+ * LOADb, register <- memory at register
+ * LOADbi, register <- memory at immediate
+ * STORb, memory at register <- register
+ * STORbi, memory at register <- immediate
+ * COPYb, memory at register <- memory at register
+ * COPYbi, memory at register <- memory at immediate
  * --------------------
  * MUL MULi, Multiply, result in first operand
  * NEG, Negate inplace
@@ -86,13 +84,12 @@ Example assembly code in /boot.asm
  * OUT, [!] first operand(REG) is data, second operand(IMM) is port number
  * POP, Get value from stack to first operand(REG)
  * POPF, Get flags from stack
- * PUSH, Send first operand(REG)
+ * PUSH, PUSHi, Send first operand
  * PUSHF, Send flags to stack
  * RET, Get ZZ, YZ from stack
- * SHL, Shift Left first operand(REG) is target, second operand(REG) is n-places
- * SHR, Shift Right first operand(REG) is target, second operand(REG) is n-places
- * STE, Set error flag
- * STI, Set interrupt flag -> DELETED
+ * SHL, SHLi, Shift Left first operand(REG) is target, second operand(REG) is n-places
+ * SHR, SHRi, Shift Right first operand(REG) is target, second operand(REG) is n-places
+ * STER, Set error flag
  * STXP, Set exception flag
  * STRS, Set reset flag
  * STSD, Set shutdown flag
@@ -103,7 +100,7 @@ Example assembly code in /boot.asm
 /**
  * Memory addresses
  * 0x0000 BOOT
- * 0xC17F VIDEO
+ * 0xB4FF VIDEO
 */
 ```
 ## Port numbers
@@ -123,6 +120,7 @@ Example assembly code in /boot.asm
  * CosmoKeyboard
  * 0x51: Set key selector, SDL Scancodes
  * 0x52: Get selected key state, 0: Up, 1: Pressed
+ * 0x53: Get pressed key, SDL Scancodes
  *
  * CosmoDisk
  * 0x61: Set mode, 0: Read, 1: Write
@@ -130,14 +128,10 @@ Example assembly code in /boot.asm
  * 0x63: Load buffer/ Write buffer
  * 0x64: Get character/Put character
  * 0x65: Get sector count
+ * 0x66: At the end of buffer
 */
 ```
 
 ## Dependencies
 Used libraries: SDL2 https://www.libsdl.org/ <br/>
 Used font("repo:/vgafont.ttf"): PCSenior font from http://www.zone38.net/
-
-## TODO
-Assembler: operand checking <br/>
-Core: More verbose and debug info <br/>
-Core: More error checking

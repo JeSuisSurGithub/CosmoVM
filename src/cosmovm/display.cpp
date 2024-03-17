@@ -1,6 +1,6 @@
 /**
  * CosmoVM an emulator and assembler for an imaginary cpu
- * Copyright (C) 2022 JeFaisDesSpaghettis
+ * Copyright (C) 2022 JeSuis
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <cosmovm/cosmoscr.hpp>
+#include <cstring>
+
+#include <cosmovm/display.hpp>
 
 using namespace cosmovm;
 
-cosmoscr::cosmoscr(std::shared_ptr<cosmobus>& bus, const std::string& window_title)
+display::display(std::shared_ptr<bus>& bus, const std::string& window_title)
 :
-m_mode(VIDEO_MODES::TEXT),
-m_bus(bus)
+m_bus(bus),
+m_video_mem_buf(m_bus->get_memory()->get_buf().begin() + VIDEO_START_ADDR),
+m_mode(VIDEO_MODES::TEXT)
 {
     SDL_CreateWindowAndRenderer(
         WINDOW_W,
@@ -35,21 +38,20 @@ m_bus(bus)
     m_color = {0xDF, 0xDF, 0xDF, 0};
 
     if((m_font = TTF_OpenFont(FONT_PATH.c_str(), 8)) == NULL)
-        throw std::invalid_argument("[COSMOSCR] Couldn't find " + FONT_PATH);
-    m_video_mem_buf = reinterpret_cast<const char*>(m_bus->get_memory()->get_buf().data()) + VIDEO_START_ADDR;
+        throw std::invalid_argument(std::format("[DISPLAY] Couldn't find {}", FONT_PATH));
 
     // Arbitrary port
-    m_bus->bind_port(0x44, std::bind(&cosmoscr::change_mode, this, std::placeholders::_1));
+    m_bus->bind_port(0x44, std::bind(&display::change_mode, this, std::placeholders::_1));
 }
 
-cosmoscr::~cosmoscr()
+display::~display()
 {
     TTF_CloseFont(m_font);
     SDL_DestroyRenderer(m_renderer);
     SDL_DestroyWindow(m_window);
 }
 
-void cosmoscr::run()
+void display::run()
 {
     switch (m_mode)
     {
@@ -64,23 +66,30 @@ void cosmoscr::run()
     }
 }
 
-bool cosmoscr::window_is_open()
+bool display::window_is_open()
 {
     return !m_quit;
 }
 
-u16i cosmoscr::change_mode(u16i mode)
+u16 display::change_mode(u16 mode)
 {
-    if (mode == VIDEO_MODES::TEXT)
-        m_mode = static_cast<VIDEO_MODES>(mode);
-    else if (mode == VIDEO_MODES::GRAPHIC)
-        m_mode = static_cast<VIDEO_MODES>(mode);
-    else throw std::invalid_argument("[COSMOSCR] Unknown mode " + std::to_string(mode));
+    switch (m_mode)
+    {
+        case VIDEO_MODES::TEXT:
+            m_mode = static_cast<VIDEO_MODES>(mode);
+            break;
+        case VIDEO_MODES::GRAPHIC:
+            m_mode = static_cast<VIDEO_MODES>(mode);
+            break;
+        default:
+            throw std::invalid_argument(std::format("[DISPLAY] Unknown mode {}", mode));
+            break;
+    }
     // Return dummy
     return PORT_DUMMY_VALUE;
 }
 
-void cosmoscr::render_text_mode()
+void display::render_text_mode()
 {
     SDL_Surface* surface;
     SDL_Texture* texture;
@@ -92,7 +101,7 @@ void cosmoscr::render_text_mode()
         surface =
             TTF_RenderUTF8_Solid_Wrapped(
                 m_font,
-                m_video_mem_buf,
+                reinterpret_cast<const char*>(&(*m_video_mem_buf)),
                 m_color,
                 WINDOW_W);
         texture = SDL_CreateTextureFromSurface(m_renderer, surface);
@@ -117,7 +126,7 @@ void cosmoscr::render_text_mode()
     }
 }
 
-void cosmoscr::render_graphic_mode()
+void display::render_graphic_mode()
 {
     SDL_Surface* surface;
     SDL_Texture* texture;
