@@ -195,7 +195,7 @@ void run(const std::string& disk_path)
     std::cout << "[EMULATOR] Shutting down..." << std::endl;
 
     if (ccpu->shutdown_flag_set() && ccpu->exception_flag_set()) {
-        std::cout << std::format("[EMULATOR] Exception flag set... dumping memory into {}...", cosmovm::DUMP_PATH) << std::endl;
+        std::cout << std::format("[EMULATOR] Exception flag set, dumping memory into {}...", cosmovm::DUMP_PATH) << std::endl;
         cmem->dump();
     }
 
