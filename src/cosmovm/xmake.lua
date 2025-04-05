@@ -11,7 +11,7 @@ target("cosmocore_static")
         "keyboard.cpp",
         "memory.cpp")
     add_includedirs(ROOT_DIR .. "include")
-    add_links("SDL2", "SDL2_ttf")
+    add_links("SDL3", "SDL3_ttf")
     local local_ROOT_DIR = ROOT_DIR
     after_build(function (target)
         os.cp(target:targetfile(), local_ROOT_DIR .. "build")
@@ -33,7 +33,7 @@ target("cosmocore_shared")
         "keyboard.cpp",
         "memory.cpp")
     add_includedirs(ROOT_DIR .. "include")
-    add_links("SDL2", "SDL2_ttf", "gomp")
+    add_links("SDL3", "SDL3_ttf")
     local local_ROOT_DIR = ROOT_DIR
     after_build(function (target)
         os.cp(target:targetfile(), local_ROOT_DIR .. "build")

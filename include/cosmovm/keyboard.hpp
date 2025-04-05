@@ -19,7 +19,7 @@
 #ifndef KEYBOARD_HPP
 #define KEYBOARD_HPP
 
-#include <SDL2/SDL_keyboard.h>
+#include <SDL3/SDL_keyboard.h>
 
 #include "common.hpp"
 #include "bus.hpp"
@@ -31,7 +31,7 @@ namespace cosmovm
     {
         private:
             u16 m_key_selector;
-            const u8* m_sdl_kb_state;
+            const bool* m_sdl_kb_state;
             std::shared_ptr<bus>& m_bus;
 
         public:

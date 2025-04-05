@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_scancode.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_scancode.h>
 #include <cosmovm/keyboard.hpp>
 
 using namespace cosmovm;
@@ -52,8 +52,8 @@ u16 keyboard::get_pressed_key(u16)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_KEYDOWN) {
-            return event.key.keysym.scancode;
+        if (event.type == SDL_EVENT_KEY_DOWN) {
+            return event.key.scancode;
         }
     }
     return SDL_SCANCODE_UNKNOWN;

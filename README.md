@@ -133,5 +133,5 @@ Example assembly code in [/example/boot.asm](/example/boot.asm)
 ```
 
 ## Dependencies
-Used libraries: SDL2 https://www.libsdl.org/ <br/>
+Used libraries: SDL3 https://www.libsdl.org/ <br/>
 Used font("repo:/vgafont.ttf"): PCSenior font from http://www.zone38.net/
