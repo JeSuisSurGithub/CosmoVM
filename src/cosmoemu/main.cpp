@@ -136,7 +136,7 @@ void run(const std::string& disk_path)
 {
     std::cout << std::format("[EMULATOR] Booting from {}...", disk_path) << std::endl;
 
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+    SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
     // Overwrite disk

@@ -21,8 +21,6 @@
 
 #include <cstdint>
 
-#include <format>
-
 namespace cosmovm
 {
     typedef std::uint8_t u8;

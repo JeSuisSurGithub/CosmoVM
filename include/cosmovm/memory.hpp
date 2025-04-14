@@ -19,9 +19,8 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
-#include <cstdint>
-
 #include <array>
+#include <string>
 #include <vector>
 
 #include "common.hpp"

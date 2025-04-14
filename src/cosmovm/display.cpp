@@ -108,7 +108,7 @@ void display::render_text_mode()
                 WINDOW_W
             );
         texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-        rect = {.x = 0, .y = 0, .w = surface->w * 1.F, .h = surface->h * 2.125F};
+        rect = {.x = 0, .y = 0, .w = static_cast<float>(surface->w), .h = static_cast<float>(surface->h * 2.125F)};
     }
 
     while (SDL_PollEvent(&event))
@@ -142,7 +142,11 @@ void display::render_graphic_mode()
         (void*)m_video_mem_buf, GFX_MODE_W);
 
     texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-    rect = {.x = 0, .y = 0, .w = surface->w * (WINDOW_W * 1.F / GFX_MODE_W), .h = surface->h * (WINDOW_H * 1.F / GFX_MODE_H)};
+    rect = {
+        .x = 0,
+        .y = 0,
+        .w = static_cast<float>(surface->w * (WINDOW_W / GFX_MODE_W)),
+        .h = static_cast<float>(surface->h * (WINDOW_H  / GFX_MODE_H))};
 
     while (SDL_PollEvent(&event))
     {
