@@ -2,6 +2,10 @@
 Assembler + emulator for an imaginary computer<br/>
 Example assembly code in [/example/boot.asm](/example/boot.asm)
 
+## Dependencies
+Used libraries: SDL3 https://www.libsdl.org/ <br/>
+Used font("repo:/vgafont.ttf"): PCSenior font from http://www.zone38.net/
+
 ## Specifications
 ```c
 /**
@@ -131,7 +135,3 @@ Example assembly code in [/example/boot.asm](/example/boot.asm)
  * 0x66: At the end of buffer
 */
 ```
-
-## Dependencies
-Used libraries: SDL3 https://www.libsdl.org/ <br/>
-Used font("repo:/vgafont.ttf"): PCSenior font from http://www.zone38.net/
