@@ -17,6 +17,7 @@
  */
 
 #include <cosmovm/disk.hpp>
+#include <format>
 
 using namespace cosmovm;
 

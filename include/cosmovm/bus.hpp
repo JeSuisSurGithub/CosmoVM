@@ -19,6 +19,7 @@
 #ifndef BUS_HPP
 #define BUS_HPP
 
+#include <format>
 #include <functional>
 #include <memory>
 #include <unordered_map>

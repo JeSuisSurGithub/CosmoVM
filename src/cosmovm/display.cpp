@@ -18,6 +18,8 @@
 
 #include <cstring>
 
+#include <format>
+
 #include <cosmovm/display.hpp>
 
 using namespace cosmovm;

@@ -19,6 +19,7 @@
 #ifndef DISPLAY_HPP
 #define DISPLAY_HPP
 
+#include <format>
 #include <memory>
 
 #include <SDL3/SDL.h>

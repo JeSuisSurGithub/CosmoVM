@@ -18,6 +18,8 @@
 
 #include <cosmovm/bus.hpp>
 
+#include <format>
+
 using namespace cosmovm;
 
 bus::bus(std::shared_ptr<memory>& memory_ref)
