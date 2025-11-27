@@ -8,7 +8,7 @@ add_requires("sdl3", "sdl3_ttf", {configs = {binaryonly = true}})
 
 set_warnings("everything")
 if is_mode("release") then
-    add_cxxflags("-Ofast", "-march=native", "-flto", "-D_GLIBCXX_PARALLEL", "-DNDEBUG")
+    add_cxxflags("-Ofast", "-march=native", "-flto=auto", "-DNDEBUG") -- "-D_GLIBCXX_PARALLEL"
 elseif is_mode("debug") then
     add_cxxflags("-Og", "-ggdb")
 end

@@ -4,12 +4,12 @@ target("cosmoemu")
     set_version("2.0.0")
     set_kind("binary")
     set_configdir(".")
-    add_configfiles("cosmovm_config.hpp.in")
+    --add_configfiles("cosmoemu_config.hpp.in")
     add_files(
         "assembler.cpp",
         "main.cpp")
     add_includedirs(ROOT_DIR .. "include")
-    add_deps("cosmocore_static", "cosmocore_shared")
+    add_deps("cosmocore_static")
     add_linkdirs(ROOT_DIR .. "build")
     add_links("SDL3", "SDL3_ttf", "cosmovm")
     local local_ROOT_DIR = ROOT_DIR
