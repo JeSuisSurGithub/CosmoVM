@@ -6,6 +6,11 @@ Example assembly code in [/example/boot.asm](/example/boot.asm)
 Used libraries: SDL3 https://www.libsdl.org/ <br/>
 Used font("repo:/vgafont.ttf"): PCSenior font from http://www.zone38.net/
 
+## Gallery
+![asm.avif](/asm.avif)
+![text_mode.avif](/text_mode.avif)
+![gfx_mode.avif](/gfx_mode.avif)
+
 ## Specifications
 ```c
 /**

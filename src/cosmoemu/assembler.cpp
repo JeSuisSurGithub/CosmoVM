@@ -605,16 +605,30 @@ void write_references(
     }
 }
 
+bool addr_comp(std::pair<std::string, std::uint16_t> a, std::pair<std::string, std::uint16_t> b) {
+    return a.second < b.second;
+}
+
+bool ref_comp(std::pair<std::uint16_t, std::string> a, std::pair<std::uint16_t, std::string> b) {
+    return a.first < b.first;
+}
+
 void link_info(
     const std::unordered_map<std::string, std::uint16_t>& addresses,
     const std::unordered_map<std::uint16_t, std::string>& references)
 {
+    std::vector<std::pair<std::string, std::uint16_t>> sort_addr(addresses.begin(), addresses.end());
+    std::sort(sort_addr.begin(), sort_addr.end(), addr_comp);
+
+    std::vector<std::pair<std::uint16_t, std::string>> sort_ref(references.begin(), references.end());
+    std::sort(sort_ref.begin(), sort_ref.end(), ref_comp);
+
     std::clog << "[LINKER] Addresses:" << std::endl;
-    for (const auto& address: addresses) {
+    for (const auto& address: sort_addr) {
         std::clog << std::format("\t0x{:04X}: {}", address.second, address.first) << std::endl;
     }
     std::clog << "[LINKER] References:" << std::endl;
-    for (const auto& ref: references) {
+    for (const auto& ref: sort_ref) {
         std::clog << std::format("\t0x{:04X}: {}", ref.first, ref.second) << std::endl;
     }
 }
