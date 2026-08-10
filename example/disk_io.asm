@@ -23,7 +23,7 @@ locate sector_load
     locate sector_load_loop
         in cz, 0x64                     ; Get character
         storb bz, cz                    ; Copy to buffer
-        inc bz,                         ; Increment pointer
+        addi bz, 1                      ; Increment pointer
     lop sector_load_loop
 
     pop hz

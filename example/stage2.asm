@@ -37,7 +37,7 @@ locate start
     sub az, mo
     locate video_copy_loop
         storbi az, 0xFF
-        inc az
+        addi az, 1
     lop video_copy_loop
 
     call wait_enter_pressed

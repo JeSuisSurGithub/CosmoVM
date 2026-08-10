@@ -57,8 +57,7 @@ const std::unordered_map<std::string, std::pair<KEYWORD, ARG_TYPE>> TOKENS = {
     {"MULI",   {INS_MULI  , REG_IMM}},
     {"DIV",    {INS_DIV   , REG_REG}},
     {"DIVI",   {INS_DIVI  , REG_IMM}},
-    {"INC",    {INS_INC   , REG}},
-    {"DEC",    {INS_DEC   , REG}},
+
     {"NEG",    {INS_NEG   , REG}},
 
     {"CMP",    {INS_CMP   , REG_REG}},
@@ -106,16 +105,12 @@ const std::unordered_map<std::string, std::pair<KEYWORD, ARG_TYPE>> TOKENS = {
     {"JNE",    {INS_JNE   , IMM}},
     {"JG",     {INS_JG    , IMM}},
     {"JGE",    {INS_JGE   , IMM}},
-    {"JL",     {INS_JL    , IMM}},
-    {"JLE",    {INS_JLE   , IMM}},
+
     {"JER",    {INS_JER   , IMM}},
-    {"JNER",   {INS_JNER  , IMM}},
+
     {"JXP",    {INS_JXP   , IMM}},
-    {"JNXP",   {INS_JNXP  , IMM}},
 
     {"LOP",    {INS_LOP   , IMM}},
-    {"LOPE",   {INS_LOPE  , IMM}},
-    {"LOPNE",  {INS_LOPNE , IMM}},
 
     {"IN",     {INS_IN    , REG_IMM}},
     {"OUT",    {INS_OUT   , REG_IMM}},

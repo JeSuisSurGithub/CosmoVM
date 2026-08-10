@@ -10,8 +10,8 @@ locate memcpy
 
     locate memcpy_loop
         copyb az, bz
-        inc az
-        inc bz
+        addi az, 1
+        addi bz, 1
     lop memcpy_loop
 
     pop hz

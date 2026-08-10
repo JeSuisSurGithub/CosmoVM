@@ -38,33 +38,24 @@ Used font("repo:/vgafont.ttf"): PCSenior font from http://www.zone38.net/
  * i-variants: takes a immediate or a label name
  * b-variants: byte-wide as opposed to word-wide by default
  *
- * WCYL, Wait cycle does nothing
  * ADD ADDi, Add, result in first operand
  * AND ANDi, Logical AND, result in first operand
  * CALL, Store MO, XA in stack, jumps to code offset + first operand(IMM)
  * CLER, Clear error flag
  * CLXP, Clear exception flag
  * CMP CMPi, Sets condition flags accordingly
- * DEC, Decrement inplace register
- * DIV DIVi, Divide, quotient in IZ, remainder in JZ
+ * DIV DIVi, Divide, quotient in GZ, remainder in HZ
  * IN, [!] first operand(REG) is destination, second operand(IMM) is port number
- * INC, Increment inplace register
  * --------------------
  * Following instructions jump to code offset + first operand(IMM)
  * JE, Jump if equal flag set
+ * JNE, Jump if equal flag cleared
  * JER, Jump if error flag set
+ * JXP, Jump if exception flag set
  * JG, Jump if greater flag set
  * JGE, Jump if greater flag set or equal flag set
- * JL, Jump if lesser flag set
- * JLE, Jump if lesser flag set or equal flag set
  * JMP, Jump unconditionally
- * JNE, Jump if equal flag cleared
- * JNER, Jump if error flag cleared
- * JNXP, Jump if exception flag cleared
- * JXP, Jump if exception flag set
- * LOP, Loop JZ times
- * LOPE, Loop if equal
- * LOPNE, Loop if not equal
+ * LOP, Loop HZ times
  * --------------------
  * --------------------
  * Following instructions copy the second operand to the first operand

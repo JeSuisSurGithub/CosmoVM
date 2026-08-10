@@ -100,14 +100,6 @@ cpu::cpu(std::shared_ptr<bus>& bus)
             m_regs.regs.gz = quotient;
             m_regs.regs.hz = remainder;
         }},
-        {INC, [this](u32 instruction) -> void
-        {
-            m_regs.table[(instruction >> 8) & 0xFF]++;
-        }},
-        {DEC, [this](u32 instruction) -> void
-        {
-            m_regs.table[(instruction >> 8) & 0xFF]--;
-        }},
         {NEG, [this](u32 instruction) -> void
         {
             m_regs.table[(instruction >> 8) & 0xFF] = (~m_regs.table[(instruction >> 8) & 0xFFFF] + 1);
@@ -310,25 +302,10 @@ cpu::cpu(std::shared_ptr<bus>& bus)
             if ((m_flags & FLAGS::GREATER) || (m_flags & FLAGS::EQUAL))
                 m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
         }},
-        {JL, [this](u32 instruction) -> void
-        {
-            if ((m_flags & FLAGS::LESSER))
-                m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
-        }},
-        {JLE, [this](u32 instruction) -> void
-        {
-            if ((m_flags & FLAGS::LESSER) || (m_flags & FLAGS::EQUAL))
-                m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
-        }},
 
         {JER, [this](u32 instruction) -> void
         {
             if (m_flags & FLAGS::ERROR)
-                m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
-        }},
-        {JNER, [this](u32 instruction) -> void
-        {
-            if (!(m_flags & FLAGS::ERROR))
                 m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
         }},
         {JXP, [this](u32 instruction) -> void
@@ -336,28 +313,11 @@ cpu::cpu(std::shared_ptr<bus>& bus)
             if (m_flags & FLAGS::EXCEPTION)
                 m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
         }},
-        {JNXP, [this](u32 instruction) -> void
-        {
-            if (!(m_flags & FLAGS::EXCEPTION))
-                m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
-        }},
 
         {LOP, [this](u32 instruction) -> void
         {
             m_regs.regs.hz--;
             if (m_regs.regs.hz != 0)
-                m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
-        }},
-        {LOPE, [this](u32 instruction) -> void
-        {
-            m_regs.regs.hz--;
-            if ((m_regs.regs.hz != 0) && (m_flags & FLAGS::EQUAL))
-                m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
-        }},
-        {LOPNE, [this](u32 instruction) -> void
-        {
-            m_regs.regs.hz--;
-            if ((m_regs.regs.hz != 0) && !(m_flags & FLAGS::EQUAL))
                 m_regs.regs.xa = (instruction >> 16) & 0xFFFF;
         }},
 

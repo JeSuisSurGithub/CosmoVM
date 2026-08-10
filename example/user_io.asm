@@ -18,7 +18,7 @@ locate clear_text_mode
     muli hz, 25
     locate clear_text_mode_loop
         storb az, bz
-        inc az
+        addi az, 1
     lop clear_text_mode_loop
 
     pop hz
@@ -48,9 +48,9 @@ locate print
         je print_exit           ; Exit if null
 
         storb cz, dz
-        inc cz
-        inc az
-        inc ez
+        addi cz, 1
+        addi az, 1
+        addi ez, 1
     jmp print_loop
 
     locate print_exit

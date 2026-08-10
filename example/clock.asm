@@ -25,7 +25,7 @@ locate int_to_str
     movi hz, 5
     locate int_to_str_clear_loop
         storbi bz, 0
-        inc bz
+        addi bz, 1
     lop int_to_str_clear_loop
 
     ; Convert
@@ -46,8 +46,8 @@ locate int_to_str
         addi hz, 0x30
         storb bz, hz
 
-        dec bz
-        inc cz
+        subi bz, 1
+        addi cz, 1
     jmp int_to_str_loop
 
     locate int_to_str_exit
@@ -75,7 +75,7 @@ locate int_to_str
         sub hz, cz
         locate int_to_str_clean2
             storbi bz, 0
-            inc bz
+            addi bz, 1
         lop int_to_str_clean2
 
         ; Setup return

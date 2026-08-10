@@ -60,8 +60,7 @@ typedef enum KEYWORD: std::uint16_t {
     INS_MULI  = BEGIN_INS + cosmovm::MULI,
     INS_DIV   = BEGIN_INS + cosmovm::DIV,
     INS_DIVI  = BEGIN_INS + cosmovm::DIVI,
-    INS_INC   = BEGIN_INS + cosmovm::INC,
-    INS_DEC   = BEGIN_INS + cosmovm::DEC,
+
     INS_NEG   = BEGIN_INS + cosmovm::NEG,
     INS_CMP   = BEGIN_INS + cosmovm::CMP,
     INS_CMPI  = BEGIN_INS + cosmovm::CMPI,
@@ -102,15 +101,13 @@ typedef enum KEYWORD: std::uint16_t {
     INS_JNE   = BEGIN_INS + cosmovm::JNE,
     INS_JG    = BEGIN_INS + cosmovm::JG,
     INS_JGE   = BEGIN_INS + cosmovm::JGE,
-    INS_JL    = BEGIN_INS + cosmovm::JL,
-    INS_JLE   = BEGIN_INS + cosmovm::JLE,
+
     INS_JER   = BEGIN_INS + cosmovm::JER,
-    INS_JNER  = BEGIN_INS + cosmovm::JNER,
+
     INS_JXP   = BEGIN_INS + cosmovm::JXP,
-    INS_JNXP  = BEGIN_INS + cosmovm::JNXP,
+
     INS_LOP   = BEGIN_INS + cosmovm::LOP,
-    INS_LOPE  = BEGIN_INS + cosmovm::LOPE,
-    INS_LOPNE = BEGIN_INS + cosmovm::LOPNE,
+
     INS_IN    = BEGIN_INS + cosmovm::IN,
     INS_OUT   = BEGIN_INS + cosmovm::OUT,
     INS_CLER  = BEGIN_INS + cosmovm::CLER,

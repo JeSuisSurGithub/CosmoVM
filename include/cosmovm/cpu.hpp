@@ -76,8 +76,6 @@ namespace cosmovm
         MULI  = 0x06,
         DIV   = 0x07,
         DIVI  = 0x08,
-        INC   = 0x09,
-        DEC   = 0x0A,
         NEG   = 0x0B,
 
         CMP   = 0x0C,
@@ -125,17 +123,9 @@ namespace cosmovm
         JNE   = 0x42,
         JG    = 0x43,
         JGE   = 0x44,
-        JL    = 0x45,
-        JLE   = 0x46,
-
         JER   = 0x47,
-        JNER  = 0x48,
         JXP   = 0x49,
-        JNXP  = 0x4A,
-
         LOP   = 0x4B,
-        LOPE  = 0x4C,
-        LOPNE = 0x4D,
 
         IN    = 0x51,
         OUT   = 0x52,
