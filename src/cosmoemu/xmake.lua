@@ -15,6 +15,6 @@ target("cosmoemu")
     local local_ROOT_DIR = ROOT_DIR
     after_build(function (target)
         os.cp(target:targetfile(), local_ROOT_DIR .. "build")
-        os.cp(local_ROOT_DIR .. "vgafont.ttf", local_ROOT_DIR .. "build")
+        os.cp(local_ROOT_DIR .. "default.ttf", local_ROOT_DIR .. "build")
     end)
 target_end()
