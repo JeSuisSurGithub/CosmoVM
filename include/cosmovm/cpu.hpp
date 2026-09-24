@@ -124,7 +124,7 @@ namespace cosmovm
     {
         private:
             reg_table m_regs;
-            u16 m_flags{0};
+            u16 m_flags;
             std::shared_ptr<bus>& m_bus;
             std::unordered_map<INSTRUCTION, std::function<void(u32)>> executers;
 

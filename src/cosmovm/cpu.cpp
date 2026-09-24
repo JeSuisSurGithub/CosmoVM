@@ -8,7 +8,7 @@
 using namespace cosmovm;
 
 cpu::cpu(std::shared_ptr<bus>& bus)
-: m_regs(), m_bus(bus)
+: m_regs(), m_flags(0), m_bus(bus)
 {
     m_regs.regs.xa = START_ADDR;
     // ALL INSTRUCTION START

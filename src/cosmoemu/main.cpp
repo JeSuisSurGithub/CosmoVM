@@ -150,7 +150,7 @@ void run(const std::string& disk_path)
     std::size_t cycles_to_execute = TARGET_CPU_FREQ / TARGET_RENDER_FREQ;
     double sleep_time = 0;
 
-    while (cscr->window_is_open() && !ccpu->shutdown_flag_set())
+    do
     {
         // RUNNING
         // Execute instructions
@@ -173,7 +173,7 @@ void run(const std::string& disk_path)
 
         // Seconds -> Milliseconds
         SDL_Delay(sleep_time * 1000);
-    }
+    } while (cscr->window_is_open() && !ccpu->shutdown_flag_set())
 
     std::cout << "[EMULATOR] Shutting down..." << std::endl;
 
